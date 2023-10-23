@@ -75,3 +75,26 @@ analysis
     1. h(k) = [(ak+b) mod p] mod m
     2. a,b는 랜덤 숫자 (0~p-1 사이), p는 전체 키들 집합 크기보다 큰 소수
     3. worst case - 다른 키 k1,k2가 충돌될 경우는 1/m! a,b를 랜덤하게 뽑는다면
+  
+## table doubling
+
+- hashtable에 m개의 슬롯을 만들어 n개의 키를 저장한다.
+- 그럼 n이 커지면?? 적당한 m은 어떻게 찾는가
+    - 우리는 m = Theta(n)을 원한다.
+- n>m 이면, grow table
+    - 새로운 사이즈 m’의 테이블만큼을 reallocate하고 rehash (new hash function이 필요)
+    - O(n+m+m’)
+    - m’은 어느정도가 좋은가 = 2*m
+        - cost of n inserts  = O(1 +2 + 4 + 8 + .. + n) = O(n)
+        - amortization에 의한 table dobling
+- deletion
+    - if  m== n/2, shrink table to m/2
+        - slow → 2배로 늘렸다가 삭제하면 다시 줄이고 다시 삽입하면 2배로 늘리고 반복할수도 있다.
+    - if m = n / 4 shrink table to m/2
+        - amortized time → O(1) 왜냐하면 n≤m ≤4n
+
+### amortization
+
+- operation takes “T(n) amortized” if k operations take ≤ k*T(n) time
+- think of meaning “T(n) on average” where average over all operations
+- 즉, table doubling에 대해 k inserts take O(n) times → O(1) amortized/insert
