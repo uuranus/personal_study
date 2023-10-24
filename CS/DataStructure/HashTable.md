@@ -4,8 +4,14 @@
 > 
 - a set of items, each items has a key. we can insert(item), delete(item), search(key)
 - 한 키에 하나의 아이템이 매칭. 기존 키에 insert하면 새로운 item으로 overwrite됨
+- (k,v) 형식의 entries들을 k를 인덱스로 이용해서 hash table이라는 배열에 저장하는 자료구조
+- k를 integer한 형태의 key로 변환하는 hash function과 변환된 hashCode를 배열의 범위 0~n-1 사이의 값으로 변환하는 compression function이 존재
 
-## 사용처
+<img width="792" alt="hashing 과정" src="https://github.com/uuranus/personal_study/assets/72340294/ec8cafeb-420e-4baf-8bd0-26eebc644143">
+
+출처: Data Structures and Algorithms in Java 6th Editiion, 411p
+
+### 사용처
 
 - docdist
     - 단어 counting, 두 doc간 공통 단어 세기 등등
@@ -20,6 +26,47 @@
 - string commonalities
 - file and directory synchronization
 - cryptography
+
+## 주요 메서드
+
+- insert
+- put
+- delete
+- map과 동일
+
+## Hash Function
+
+- int형의 hashCode를 반환하는 함수. 배열의 크기에 상관없는 값을 리턴하기 때문에 음수값도 가능하다.
+- collision이 최소화되게 맵핑하는 게 중요
+- 해시함수 예시
+    - bit representation?
+    - polynominal
+    - cyclic-shift
+- 한 방법들이 존재
+- In Java
+    - hashCode는 객체의 주소값
+    - equals()로 동일하게 취급되는 객체의 hashCode값은 같아야 한다.
+        - equals라면, 두 객체를 Map에 insert했을 때, 동일한 키값에서 저장이 되어야 한다. 이 때, hashCode를 통해서 저장되기 때문에 동일하게 해줘야 한다.
+        - if x.equals(y) then x.hashCode() == y.hashCode().
+
+## Compression Function
+
+- hash function이 반환한 int 값을 배열의 범위 [0,n-1]에 맞춰서 리턴해주는 함수
+- division method
+- the MAD mthod (multiply-add-and-divide)
+- 방식이 존재
+
+## Collision-Handling
+
+- 아무리 좋은 hash function, compression function을 선택하여도 서로 다른 두 키값이 동일한 해시값으로 변환되어서 같은 배열의 인덱스에 저장될 수 있다.
+    - 이를 collision이라고 한다.
+- 이 때, 충돌된 두 키의 value를 어떻게 저장할 것인지가 collision-handling이다.
+- separate chaining
+- open addressing
+    - linear probing
+    - quadratic probing
+    - double hashing
+- 방법이 존재
 
 ## 시간 복잡도
 
@@ -75,7 +122,8 @@ analysis
     1. h(k) = [(ak+b) mod p] mod m
     2. a,b는 랜덤 숫자 (0~p-1 사이), p는 전체 키들 집합 크기보다 큰 소수
     3. worst case - 다른 키 k1,k2가 충돌될 경우는 1/m! a,b를 랜덤하게 뽑는다면
-  
+    
+
 ## table doubling
 
 - hashtable에 m개의 슬롯을 만들어 n개의 키를 저장한다.
